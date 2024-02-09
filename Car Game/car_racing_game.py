@@ -13,20 +13,19 @@ car_speed = 10
 obstacle_speed = 5
 obstacle_frequency = 45 
 
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 
-# Initialize screen
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("2D Car Racing Game")
 
-# Load images
+
 car_img = pygame.image.load("assets\\images\\car.png")
 car_img = pygame.transform.scale(car_img, (100, 160))  
 
-# Initialize clock
+
 clock = pygame.time.Clock()
 
 class Car:
@@ -54,9 +53,9 @@ class Obstacle:
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
     def draw(self):
-        self.rect.topleft = (self.x, self.y)  # Update rect position
+        self.rect.topleft = (self.x, self.y) 
 
-        # Draw obstacle based on color and shape variations
+       
         if self.color_variation == 1:
             color = RED
         else:
@@ -68,11 +67,11 @@ class Obstacle:
             pygame.draw.circle(screen, color, self.rect.center, self.width // 2)
 
 def check_collision(car, obstacle):
-    # Check if the car's rect collides with the obstacle's rect
+    
     return car.rect.colliderect(obstacle.rect)
 
 def game_loop():
-    car = Car(WIDTH // 2 - 40, HEIGHT - 240)  # Adjusted starting position
+    car = Car(WIDTH // 2 - 40, HEIGHT - 240)  
     obstacles = []
 
     score = 0
@@ -89,17 +88,17 @@ def game_loop():
         if keys[pygame.K_d] and car.x < WIDTH - car.width:
             car.x += car_speed
 
-        # Generate obstacles
+        
         if random.randrange(0, obstacle_frequency) == 0:
             obstacle_width = random.randint(50, 100)
             obstacle_height = random.randint(50, 100)
             obstacle_x = random.randint(0, WIDTH - obstacle_width)
             obstacle_y = -obstacle_height
-            color_variation = random.randint(1, 2)  # Randomly select color variation
-            shape_variation = random.randint(1, 2)  # Randomly select shape variation
+            color_variation = random.randint(1, 2) 
+            shape_variation = random.randint(1, 2)  
             obstacles.append(Obstacle(obstacle_x, obstacle_y, obstacle_width, obstacle_height, color_variation, shape_variation))
 
-        # Move obstacles
+       
         for obstacle in obstacles:
             obstacle.y += obstacle_speed
             if obstacle.y > HEIGHT:
@@ -110,16 +109,16 @@ def game_loop():
             if check_collision(car, obstacle):
                 game_over(score)
 
-        # Update car rect
+       
         car.update_rect()
 
-        # Draw everything
+       
         screen.fill(BLACK)
         car.draw()
         for obstacle in obstacles:
             obstacle.draw()
 
-        # Display the score
+      
         font = pygame.font.SysFont(None, 30)
         score_text = font.render("Score: " + str(score), True, WHITE)
         screen.blit(score_text, (10, 10))
@@ -131,7 +130,7 @@ def game_over(score):
     pygame.mixer.music.stop()
     response = messagebox.askyesno("Game Over", "Your car crashed! Your score: {}\nDo you want to play again?".format(score))
     if response:
-        # Restart the game
+        
         game_loop()
     else:
         pygame.quit()
@@ -143,17 +142,16 @@ def start_game():
     pygame.mixer.music.play(1)
     game_loop()
 
-# Create a Tkinter window for the game menu
 root = tk.Tk()
 root.title("Car Racing Game")
 
-# Add a label
+
 label = tk.Label(root, text="2D Car Racing Game", font=("Helvetica", 16))
 label.pack(pady=10)
 
-# Add a button to start the game
+
 start_button = tk.Button(root, text="Start Game", command=start_game, font=("Helvetica", 14))
 start_button.pack(pady=20)
 
-# Run the Tkinter main loop
+
 root.mainloop()
